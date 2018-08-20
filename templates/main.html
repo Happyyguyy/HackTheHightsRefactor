@@ -1,0 +1,94 @@
+{% extends 'layout.html' %}
+
+{% block body%}
+<div class="blackout">
+    </div>
+<div id="postPane" class="postPane">
+
+<div class="sidebyside">
+    <div class="row">
+    <div class="col-sm-1"></div>
+        <button class="btn btn-warning" style="margin: 3rem 0px 0px 0px;" onclick="closePane()">&lt; Close</button>
+
+    <div class="col-sm">
+<h1 class="card text-center" style="margin-top: 3rem;margin-left : 5px;">
+    Post a Card!
+</h1>
+    </div>
+    </div>
+</div>
+<br />
+<div class="container">
+ <div class="form-group">
+ <label for="title">Title</label>
+<input class="form-control" type="text" id="title">
+     </div>
+<div class="form-group">
+<label for="Message">Message</label>
+<textarea class="form-control" id="message" rows="3"></textarea>
+</div>
+<br />
+<div class="someotherthing">
+  <div class="row">
+    <div class="col-sm">
+    <input class="form-control" placeholder="Location" type="text" id="LocTag">
+    </div>
+    <div class="col-sm">
+     <input class="form-control" placeholder="Tags" type="text" id="tagTag">
+    </div>
+ </div>
+ </div>
+<br />
+<button id="Post" onclick="newPost();closePane();ClearFields()" class="btn btn-success" style="margin-top:2rem;">Post</button>
+ </div>
+</div>
+<!--div for the first panel-->
+<div id="panelOne" class="panelOne bg-primary">
+<h1 class="heading text-light">Tags</h1>
+<p class="text-light" style="margin-left: 30px;">Click a Tag below to view cards with that tag.</p>
+
+<!--    div for second panel-->
+<div id="panelTwo" class="panelTwo">
+<a href="javascript:void(0)" class="closebtn" onclick="closeTwo()">&laquo;</a>
+<h1 class="heading text-dark">Cards</h1>
+<p class="text-dark" style="margin-left: 30px;">Click on a card below to see replies.</p>
+<div class="card">
+<span style="font-size:30px;cursor:pointer" onclick="openThree()">
+    <h1 class="title" id="PostCardTitle">Title</h1>
+        <p class="comment" id="PostCardMessage">Subtitle of a card</p>
+        <p class="time">Time: Sometime EST</p>
+    </span>
+</div>
+
+</div>
+<!--div for third panel-->
+<div id="panelThree" class="panelThree bg-light">
+<a href="javascript:void(0)" class="closebtn " onclick="closeThree()">&times; Close</a>
+<div class="card">
+
+    <div class="row">
+        <div class="col-sm">
+            <h1 class="heading">Comments</h1></div>
+    <div class="col-sm">
+        <button style="margin-top: .6rem; margin-left: 3rem;" class="btn btn-success">
+        Reply!</button>
+        </div>
+    </div>
+        <bl />
+    <div class="card">
+    <h2 style="margin-left: 15px;"> A sentence with a comment.</h2>
+    <p style="margin-left:60px;opacity: 50%;">Time: sometime EST</p>
+    </div>
+       <div class="card">
+    <h2 style="margin-left: 15px;"> 2nd sentence with a comment.</h2>
+    <p style="margin-left:60px;opacity: 50%;">Time: sometime EST</p>
+    </div>
+        <div class="card">
+    <h2 style="margin-left: 15px;"> 2nd sentence with a comment.</h2>
+    <p style="margin-left:60px;opacity: 50%;">Time: sometime EST</p>
+    </div>
+</div>
+
+
+</div>
+{% endblock %}
