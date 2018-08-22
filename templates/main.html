@@ -8,24 +8,21 @@
 <div id="panelOne" class="panelOne bg-primary">
 <h1 class="heading text-light">Tags</h1>
 <p class="text-light" style="margin-left: 30px;">Click a Tag below to view cards with that tag.</p>
-
+<button id="test-button" onclick="openPanelTwo()" class="btn btn-warning">Open next</button>
 <!--    div for second panel-->
 <div id="panelTwo" class="panelTwo">
-<a href="javascript:void(0)" class="closebtn" onclick="closeTwo()">&laquo;</a>
+<a href="javascript:void(0)" class="closebtn" onclick="closePanelTwo()">&laquo;</a>
 <h1 class="heading text-dark">Cards</h1>
 <p class="text-dark" style="margin-left: 30px;">Click on a card below to see replies.</p>
-<div class="card">
-<span style="font-size:30px;cursor:pointer" onclick="openThree()">
-    <h1 class="title" id="PostCardTitle">Title</h1>
-        <p class="comment" id="PostCardMessage">Subtitle of a card</p>
-        <p class="time">Time: Sometime EST</p>
-    </span>
+
+<div class="container" id="cards">
+
 </div>
 
 </div>
 <!--div for third panel-->
 <div id="panelThree" class="panelThree bg-light">
-<a href="javascript:void(0)" class="closebtn " onclick="closeThree()">&times; Close</a>
+<a href="javascript:void(0)" class="closebtn " onclick="closePanelThree()">&times; Close</a>
 <div class="card">
 
     <div class="row">

@@ -5,7 +5,7 @@ body {
 
 .panelOne {
     height: 100%;
-    width: 25%;
+    width: 35%;
     position: fixed;
     z-index: 2;
     top: 0;
@@ -100,13 +100,12 @@ body {
     margin-left: 40px;
 }
 .postPane {
-    left: 60%;
+    left: 30%;
     width: 40%;
     background-color: darkgray;
     z-index: 3;
     position:fixed;
     top:3.5rem;
-    left:20%;
     height: 0;
     transition: 0.5s;
     border-bottom-right-radius: 50px;
