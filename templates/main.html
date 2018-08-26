@@ -8,22 +8,30 @@
 <div id="panelOne" class="panelOne bg-primary">
 <h1 class="heading text-light">Tags</h1>
 <p class="text-light" style="margin-left: 30px;">Click a Tag below to view cards with that tag.</p>
-<button id="test-button" onclick="openPanelTwo()" class="btn btn-warning">Open next</button>
+
+<!--  test button-->
+<button id="test-button" onclick="populateTags(this.id);" class="btn btn-warning">Open next</button>
+</div>
 <!--    div for second panel-->
 <div id="panelTwo" class="panelTwo">
 <a href="javascript:void(0)" class="closebtn" onclick="closePanelTwo()">&laquo;</a>
-<h1 class="heading text-dark">Cards</h1>
+<h1 class="heading text-dark" id="cardListHeading"></h1>
 <p class="text-dark" style="margin-left: 30px;">Click on a card below to see replies.</p>
 
-<div class="container" id="cards">
 
+<!-- ###REMOVE### -->
+<button id="test-button" onclick="openPanelThree(this.id)" class="btn btn-warning">Open next</button>
+
+
+<div class="container" id="cards">
+  <!-- populated by script -->
 </div>
 
 </div>
 <!--div for third panel-->
 <div id="panelThree" class="panelThree bg-light">
 <a href="javascript:void(0)" class="closebtn " onclick="closePanelThree()">&times; Close</a>
-<div class="card">
+<div class="card" id="commentList">
 
     <div class="row">
         <div class="col-sm">
@@ -33,21 +41,17 @@
         Reply!</button>
         </div>
     </div>
-        <bl />
-    <div class="card">
-    <h2 style="margin-left: 15px;"> A sentence with a comment.</h2>
-    <p style="margin-left:60px;opacity: 50%;">Time: sometime EST</p>
-    </div>
-       <div class="card">
-    <h2 style="margin-left: 15px;"> 2nd sentence with a comment.</h2>
-    <p style="margin-left:60px;opacity: 50%;">Time: sometime EST</p>
-    </div>
-        <div class="card">
-    <h2 style="margin-left: 15px;"> 2nd sentence with a comment.</h2>
-    <p style="margin-left:60px;opacity: 50%;">Time: sometime EST</p>
-    </div>
 </div>
 
 
 </div>
+<script>
+
+  tags.on('child_added', populateTags);
+
+  var postPane = document.getElementById("postPane");
+  var panelOne = document.getElementById("panelOne");
+  var panelTwo = document.getElementById("panelTwo");
+  var panelThree = document.getElementById("panelThree");
+</script>
 {% endblock %}

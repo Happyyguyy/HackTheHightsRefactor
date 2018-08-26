@@ -27,7 +27,7 @@ body {
 .panelTwo {
     height: 100%;
     width: 0%;
-    margin-left: 25%;
+    margin-left: 35%;
     position: fixed;
     z-index: 2;
     top: 0;
@@ -59,7 +59,7 @@ body {
 .panelThree {
     height: 100%;
     width: 0%;
-    margin-left: 50%;
+    margin-left: 65%;
     position: fixed;
     z-index: 2;
     top: 0;
@@ -94,10 +94,12 @@ body {
 }
 .title {
     margin-left: 5px;
+    text-align: left;
 }
 .comment {
     font-size: 20px;
-    margin-left: 40px;
+    margin-left: 20px;
+    text-align: left;
 }
 .postPane {
     left: 30%;
@@ -129,8 +131,9 @@ body {
 
 }
 .time {
-    margin-left: 60px;
+    text-align: right;
     font-size: 10px;
+    margin-right: 10px;
 }
 ::-webkit-scrollbar {
     width: .5em;
