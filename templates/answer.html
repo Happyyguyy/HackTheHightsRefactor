@@ -1,0 +1,148 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<script src="static/answers.js"></script>
+<div class="h-100">
+
+<div class="container-fluid w-100 h-100" >
+    <div class="row h-100">
+
+    <div class="options col-1 bg-dark">
+        <div class="row text-center justify-content-center">
+            <h4 class="text-center text-light">Options</h4>
+        </div>
+        <div class="row">
+            <button class="btn btn-success" style="margin-top:5px;" id="btn-unanswered">Unanswered</button>
+        </div>
+        <div class="row">
+            <button class="btn btn-standard" style="margin-top:5px;" id="btn-answered">Answered</button>
+        </div>
+        <div class="row">
+            <button class="btn btn-primary" style="margin-top:5px;" id="btn-all">All</button>
+        </div>
+        <div class="row">
+            <button class="btn btn-warning" style="margin-top:5px;" id="adminNewPost">New post</button>
+        </div>
+    </br>
+        <div class="row justify-content-center">
+            <div class="form-group">
+                <input class="form-control" type="text" name="Title" id="searchBox" placeholder="Search" id="title">
+                <button type="submit" class="btn btn-primary" style="margin-top:5px" id="btn-search">Search</button>
+            </div>
+        </div>
+    </div>
+    <div class="questions col-3 bg-primary" data-type="null">
+        <h1 class="text-center list-type" style="color:white">Unanswered Questions</h1>
+    </br>
+        <div id="questionList">
+            <div class="card align-center">
+                <h2 class="align-center title">
+                    All Questions Answered
+                </h2>
+            </div>
+        </div>
+
+    </div>
+    <div class="thread col-4 bg-info">
+        <div class="container-fluid" style="text-align:left;margin-top: 5px;">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title" id="questionHeader">Question</h4>
+                    <h6 class="card-subtitle text-muted" id="questionDateTime">dateTime</h6>
+                    <p id="questionContent">
+                        <!-- Populated by script -->
+                    </p>
+                </div>
+            </div>
+            <div class="card">
+                <button class="btn btn-danger" id="deleteCard">Delete Card</button>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    Comments (Tick checkbox to delete)
+                </div>
+                    <ul class="list-group list-group-flush" id="commentList" data-remove-tag-list="">
+                        <li class="list-group-item commentCard">
+                            No comments
+                        </li>
+                        <!-- Poulated by script-->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    <div class="answer col-4 bg-light">
+
+        <div class="card" style="height: 42.2vh; overflow-y: scroll">
+            <div class="card-header">
+                Tags
+            </div>
+
+                <ul class="list-group list-group-flush" id="tagList" data-remove-tag-list="">
+                    <li class="list-group-item bg-light border-bottom">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <button class="btn" onclick="newTag()">+</button>
+                            </span>
+                            <input type="text" class="form-control" id="newTag"/>
+                        </div>
+
+                    </li>
+                    <!-- Populated by Script -->
+                </ul>
+        </div>
+        <div class="card border-info answerCard">
+                <div class="form-group p-4">
+                    <label for="answerBox" class="display-4" style="margin-left:10px;">Answer:</label>
+                    <p id="answerDateTime">
+                        <!-- Filled by Script -->
+                    </p>
+                    <textarea class="form-control border-dark" id="answerBox" rows="4" style="margin-top:10px;"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="submit">Answer and/or Update</button>
+        </div>
+    </div>
+    </div>
+</div>
+</div>
+<script>
+    // document.querySelector("#submit").addEventListener("click", function() {
+        // var answer = $("#answerBox").val();
+    // })
+</script>
+<!-- <div class="container-fluid h-100" style="height: 100%;">
+    <div class="row m-2 h-100" style="height:100%;">
+        <div class="col-3 bg-secondary h-100" style="height:100%;">
+            <h1 class="text-primary">Left Column</h1>
+        </div>
+        <div class="col-9 bg-warning h-100" style="height:100%;">
+            <h1>Right Column</h1>
+        </div>
+  </div>
+</div> -->
+
+<!-- <div class="container h-100">header
+      <div class="row h-100">
+        <div class="col-md-3 h-100">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has </div>
+        <div class="col-md-9 h-100">col2</div>
+      </div>
+</div> -->
+<script>
+    document.querySelector("#btn-unanswered").addEventListener("click", event => {listUnanswered()});
+    document.querySelector("#btn-answered").addEventListener("click", event => {listAnswered()});
+    document.querySelector("#btn-all").addEventListener("click", event => {listAll()});
+    document.querySelector("#adminNewPost").addEventListener("click", event => {adminNewPost();});
+    document.querySelector("#btn-search").addEventListener("click", event => {searchIn()});
+    document.querySelector("#submit").addEventListener("click", event => {completeCard()});
+    document.querySelector("#deleteCard").addEventListener("click", function(event) {
+        this.classList.add("bg-secondary", "border-0");
+        this.disabled = true;
+        this.innerHTML = "Card deleted. Click the 'Update' button to reinstate."
+        console.log("click");
+        deleteCardInDatabase()});
+    listUnanswered();
+    setTimeout(function () {
+        var firstUnansweredQuestion = document.querySelector("#questionList").firstElementChild.dataset.thread;
+        loadQuestion(firstUnansweredQuestion)
+    }, 1000);
+</script>
+{% endblock %}

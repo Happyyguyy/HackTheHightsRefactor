@@ -1,6 +1,9 @@
 {% extends 'layout.html' %}
 
-{% block body%}
+{% block body %}
+<div class="container">
+<script src="static/panels.js" defer></script>
+
 <div class="blackout">
     </div>
 
@@ -8,21 +11,24 @@
 <div id="panelOne" class="panelOne bg-primary">
 <h1 class="heading text-light">Tags</h1>
 <p class="text-light" style="margin-left: 30px;">Click a Tag below to view cards with that tag.</p>
-
-<!--  test button-->
-<button id="test-button" onclick="populateTags(this.id);" class="btn btn-warning">Open next</button>
+<!-- TODO: Add searchbar -->
+<div id="tagList">
+    <!-- populated by script -->
+</div>
 </div>
 <!--    div for second panel-->
 <div id="panelTwo" class="panelTwo">
 <a href="javascript:void(0)" class="closebtn" onclick="closePanelTwo()">&laquo;</a>
 <h1 class="heading text-dark" id="cardListHeading"></h1>
 <p class="text-dark" style="margin-left: 30px;">Click on a card below to see replies.</p>
-
-
-<!-- ###REMOVE### -->
-<button id="test-button" onclick="openPanelThree(this.id)" class="btn btn-warning">Open next</button>
-
-
+<!-- TODO: Add searchbar -->
+<!-- TODO: Add option to see unanswered -->
+<div class="card">
+    <div class="form-check" onclick="populateCards(this.parentElement.parentElement.dataset.tag)">
+        <input type="checkbox" class="form-check-input" id="showUnanswered" />
+        <label class="form-check-label" for="showUnanswered">Show Unanswered Cards</label>
+    </div>
+</div>
 <div class="container" id="cards">
   <!-- populated by script -->
 </div>
@@ -30,21 +36,30 @@
 </div>
 <!--div for third panel-->
 <div id="panelThree" class="panelThree bg-light">
-<a href="javascript:void(0)" class="closebtn " onclick="closePanelThree()">&times; Close</a>
-<div class="card" id="commentList">
-
-    <div class="row">
+    <a href="javascript:void(0)" class="closebtn " onclick="closePanelThree()">&times; Close</a>
+    <div class="card text-left" id="answer">
+        <label for="answerBox" class="display-4" style="margin-left:10px;">Answer:</label>
+        <p id="answerDateTime" style="margin-left:10px" class="text-secondary">
+            <!-- Filled by Script -->
+        </p>
+        <h3 id="answerText" class="comment">This question has not been answered yet.</h3>
+    </div>
+    <div class="card" id="commentList">
+        <div class="row">
+            <div class="col-sm">
+                <h1 class="heading">Comments</h1></div>
         <div class="col-sm">
-            <h1 class="heading">Comments</h1></div>
-    <div class="col-sm">
-        <button style="margin-top: .6rem; margin-left: 3rem;" class="btn btn-success">
-        Reply!</button>
+            <!-- TODO: Make replies work -->
+            <button style="margin-top: .6rem; margin-left: 3rem;" class="btn btn-success" onclick="drawCommentBox()">
+            Comment!</button>
+            </div>
         </div>
     </div>
 </div>
 
-
 </div>
+<script src="static/panels.js"></script>
+
 <script>
 
   tags.on('child_added', populateTags);
@@ -54,4 +69,5 @@
   var panelTwo = document.getElementById("panelTwo");
   var panelThree = document.getElementById("panelThree");
 </script>
+</div>
 {% endblock %}

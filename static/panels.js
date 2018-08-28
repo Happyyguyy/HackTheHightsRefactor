@@ -1,6 +1,6 @@
-panelOne = document.querySelector("#panelOne");
-panelTwo = document.querySelector("#panelTwo");
-panelThree = document.querySelector("#panelThree");
+var panelOne = document.querySelector("#panelOne");
+var panelTwo = document.querySelector("#panelTwo");
+var panelThree = document.querySelector("#panelThree");
 
 panelOne.dataset.state = "extended";
 panelTwo.dataset.state = "closed";
@@ -110,4 +110,251 @@ function openPanelThree(thread) {
 
   panelThree.dataset.thread = thread;
   alignPanels();
+}
+function createCard(object) {
+  var cards = document.querySelector("#cards");
+  var homeTag = document.querySelector("#panelTwo").dataset.tag;
+
+  cardContent = object.val();
+
+  var id = object.key;
+  var title = cardContent["title"];
+  var message = cardContent["message"];
+  var time = new Date(parseInt(cardContent["createdDateTime"])).toLocaleString();
+
+  var card = document.createElement('div');
+  card.setAttribute("class", "card");
+  card.setAttribute("id", object.key);
+  card.setAttribute("data-thread", id);
+
+  card.innerHTML = `
+  <span style="font-size:30px;cursor:pointer" onclick="populateComments(this.parentElement.id)">
+      <div class="card-body p-1">
+      <h4 class="card-title text-left">`+title+`</h4>
+          <h6 class="comment">`+message+`</h6>
+          <p class="time">Created: `+time+`</p>
+      </div>
+      </span>
+  `
+  cards.appendChild(card);
+
+  tags.child(homeTag).child(id).once("value").then(snapshot => {
+      card.setAttribute("data-completed", snapshot.val())
+      console.log(snapshot.val());
+  });
+
+}
+
+function populateCards(tag){
+  var showUnanswered = document.querySelector("#showUnanswered").checked;
+  var cardListHeading = panelTwo.dataset.tag;
+  if (cardListHeading !== tag || showUnanswered) {
+    document.querySelector("#cardListHeading").textContent = tag;
+    closePanelTwo();
+    deleteCards();
+    firebase.database().ref("tags").child(tag).once("value", function(snapshot){
+     for (var key in snapshot.val()) {
+       var value = snapshot.val()[key];
+       console.log(value);
+       if (value === "completed"){
+         completed.child(key).once("value", createCard);
+       }
+       if (showUnanswered && value === "pending") {
+           pending.child(key).once("value", createCard);
+       }
+      }
+    });
+    openPanelTwo();
+  };
+  if (cardListHeading === tag && panelTwo.dataset.state === "closed") {
+    openPanelTwo();
+  }
+ panelTwo.dataset.tag = tag;
+}
+
+function deleteCards() {
+  var cards = document.getElementById("cards");
+  var cardList = document.querySelector("#cards").querySelectorAll(".card");
+  // console.log("deleteCards()");
+  for (i = 0; i < cardList.length; i++) {
+    cards.removeChild(cardList[i]);
+    }
+  }
+
+function populateTags(snapshot) {
+  var tagList = document.querySelector("#tagList");
+  var id = snapshot.key;
+  var tag = document.createElement('div');
+    tag.setAttribute("class", "card");
+    tag.setAttribute("id", id);
+    tag.innerHTML = `<span class="align-middle" style="font-size:30px;cursor:pointer; text-align:center" onclick="populateCards(this.parentElement.id)"><h1 class="title">&#9776; `+id+'<h1></span>'
+    tagList.appendChild(tag);
+}
+
+function createComment(commentData)  {
+
+  var comment = commentData["comment"];
+  var timeStamp = new Date(parseInt(commentData["dateTime"])).toLocaleString();
+
+  var commentList = document.querySelector("#commentList");
+
+  var commentCard = document.createElement('div');
+  commentCard.setAttribute("class", "card comCard");
+  // commentCard.setAttribute("class", "comCard")
+
+    var commentText = document.createElement('h5');
+    commentText.setAttribute("class", "comment");
+    commentText.textContent = comment;
+    commentCard.appendChild(commentText);
+
+    var commentTime = document.createElement('p');
+    commentTime.setAttribute("class", "time");
+    commentTime.textContent = "Time: " + timeStamp;
+    commentCard.appendChild(commentTime);
+
+  commentList.appendChild(commentCard);
+}
+// var text = "This question has not been answered yet.";
+// var dateTime = "";
+
+function populateComments(key) {
+  var thread = panelThree.dataset.thread;
+  var showUnanswered = document.querySelector("#showUnanswered").checked;
+  var answeredState = document.getElementById(key).dataset.completed;
+
+  if (thread !== key) {
+    deleteComments();
+    openPanelThree();
+    // Set Answer; Set it to default if it doesn't exist
+    completed.child(key).child("answer").once("value", snapshot => {
+        console.log(snapshot.val())
+        if (snapshot.val() !== null) {
+            var text = snapshot.val()["text"];
+            var dateTime = "Answered: " +  new Date(snapshot.val()["dateTime"]).toLocaleString();
+        }
+        else {
+            var text = "This question has not been answered yet.";
+            var dateTime = "";
+        }
+        document.querySelector("#answerDateTime").textContent = dateTime;
+        document.querySelector("#answerText").textContent = text;
+
+    })
+    // Create List of comments; if non post default
+    completed.child(key).child("comments").once("value", function(snapshot){
+        console.log(snapshot.val());
+        if (snapshot.val()) {
+          snapshot.val().forEach(element => createComment(element))
+          }
+        else {
+            pending.child(key).child("comments").once("value", function(snapshot) {
+                if (snapshot.val()) {
+                    snapshot.val().forEach(element => createComment(element))
+                }
+                else {
+                    var commentList = document.querySelector("#commentList");
+                        var commentCard = document.createElement('div');
+                        commentCard.setAttribute("class", "card comCard");
+                        commentCard.textContent = "No Comments";
+                    commentList.appendChild(commentCard);
+                }
+            })
+        }
+  });
+  // Set data regarding what comments are being shown.
+  panelThree.dataset.thread = key;
+  panelThree.dataset.completed = answeredState;
+
+  }
+  if (thread === key && panelThree.dataset.state === "closed") {
+    openPanelThree();
+  }
+}
+
+function deleteComments() {
+  var commentBox = document.querySelector("#commentBoxDiv");
+  if (commentBox) {
+      commentBox.parentNode.removeChild(commentBox);
+  }
+  var commentList = document.querySelectorAll(".comCard");
+
+  commentList.forEach(function(element){
+    element.parentNode.removeChild(element);
+  });
+}
+// TODO: Add function to search tags
+// TODO: Add function to search cards
+
+// TODO: Make commenting work
+function drawCommentBox() {
+    var commentBoxDiv = document.querySelector("#commentBoxDiv")
+
+    if (commentBoxDiv) {return}
+    else {
+        var commentBox = document.createElement("div");
+        commentBox.setAttribute("id", "commentBoxDiv");
+        commentBox.innerHTML =`
+        <div class="card">
+            <div class="card-header text-left font-weight-bold">
+                Add Reply!
+            </div>
+            <textarea class="form-control border-0" id="commentBox" rows="4" style="margin-top:10px;"></textarea>
+            <button type="submit" class="btn btn-primary" id="postComment" onclick="submitComment(this.previousElementSibling.value.trim())">Post Comment</button>
+        `
+        document.querySelector("#panelThree").appendChild(commentBox);
+        document.querySelector("#commentBox").focus();
+    }
+}
+function submitComment(text) {
+    if (!text) {return};
+
+    var thread = document.querySelector("#panelThree").dataset.thread;
+    var location = document.querySelector("#panelThree").dataset.completed;
+    console.log(thread, location);
+
+    if (location === "completed") {
+        completed.child(thread).once("value").then(snapshot => {
+            if (!snapshot.hasChild("comments")) {
+                var comList = [];
+            }
+            else {
+                var comList = snapshot.child("comments").val();
+            }
+            var newComment = {};
+            newComment["comment"] = text;
+            newComment["dateTime"] = firebase.database.ServerValue.TIMESTAMP
+            comList.push(newComment);
+            completed.child(thread).child("comments").set(comList);
+            console.log(newComment);
+
+            // Update comment list with new comment
+            // Modify timestamp to be valid in client
+            newComment["dateTime"] = Math.floor(Date.now());
+            createComment(newComment);
+
+
+        })
+    }
+    else if (location === "pending") {
+        pending.child(thread).once("value").then(snapshot => {
+            if (!snapshot.hasChild("comments")) {
+                var comList = [];
+            }
+            else {
+                var comList = snapshot.child("comments").val();
+            }
+            var newComment = {};
+            newComment["comment"] = text;
+            newComment["dateTime"] = firebase.database.ServerValue.TIMESTAMP
+            comList.push(newComment);
+            pending.child(thread).child("comments").set(comList);
+
+            // Update comment list with new comment
+            // Modify timestamp to be valid in client
+            newComment["dateTime"] = Math.floor(Date.now()/1000);
+            createComment(newComment);
+
+        })
+    }
+    document.querySelector("#commentBox").value = "";
 }
