@@ -140,36 +140,46 @@ function createCard(object) {
 
   tags.child(homeTag).child(id).once("value").then(snapshot => {
       card.setAttribute("data-completed", snapshot.val())
-      console.log(snapshot.val());
+      // console.log(snapshot.val());
   });
 
 }
 
-function populateCards(tag){
-  var showUnanswered = document.querySelector("#showUnanswered").checked;
-  var cardListHeading = panelTwo.dataset.tag;
-  if (cardListHeading !== tag || showUnanswered) {
-    document.querySelector("#cardListHeading").textContent = tag;
-    closePanelTwo();
-    deleteCards();
-    firebase.database().ref("tags").child(tag).once("value", function(snapshot){
-     for (var key in snapshot.val()) {
-       var value = snapshot.val()[key];
-       console.log(value);
-       if (value === "completed"){
-         completed.child(key).once("value", createCard);
-       }
-       if (showUnanswered && value === "pending") {
-           pending.child(key).once("value", createCard);
-       }
+function populateCards(tag, type){
+
+      var showUnanswered = document.querySelector("#showUnanswered").checked;
+      console.log(showUnanswered);
+      console.log("rerun");
+      var cardListHeading = panelTwo.dataset.tag;
+
+      if (cardListHeading !== tag || showUnanswered || type) {
+        document.querySelector("#cardListHeading").textContent = tag;
+        closePanelTwo();
+        deleteCards();
+        firebase.database().ref("tags").child(tag).once("value", function(snapshot){
+            console.log(snapshot.val());
+         for (var key in snapshot.val()) {
+           var value = snapshot.val()[key];
+           console.log("..."+value);
+           if (value === "completed"){
+               console.log("......completed");
+             completed.child(key).once("value", createCard);
+           }
+           else if (showUnanswered && value === "pending") {
+               console.log("......pending");
+               pending.child(key).once("value", createCard);
+           }
+          }
+        });
+        openPanelTwo();
       }
-    });
-    openPanelTwo();
-  };
-  if (cardListHeading === tag && panelTwo.dataset.state === "closed") {
-    openPanelTwo();
-  }
- panelTwo.dataset.tag = tag;
+      // skips script and opens already loaded panel
+      else if (cardListHeading === tag && panelTwo.dataset.state === "closed") {
+        openPanelTwo();
+      }
+     panelTwo.dataset.tag = tag;
+
+
 }
 
 function deleteCards() {
@@ -179,6 +189,7 @@ function deleteCards() {
   for (i = 0; i < cardList.length; i++) {
     cards.removeChild(cardList[i]);
     }
+    panelTwo.dataset.tag = "";
   }
 
 function populateTags(snapshot) {
@@ -357,4 +368,34 @@ function submitComment(text) {
         })
     }
     document.querySelector("#commentBox").value = "";
+}
+function search(query, type) {
+    console.log(query,type);
+    if (type === "tags") {
+        var list = document.querySelectorAll("#tagList .card");
+        list.forEach(function(element) {
+            if (element.id.search(query) === -1) {
+                element.hidden = true;
+            }
+            else {
+                element.hidden = false;
+            }
+        })
+    }
+    else if (type === "cards") {
+        var list = document.querySelectorAll("#cards div");
+
+        list.forEach(function(element) {
+            var comment = element.querySelector(".comment");
+            var title = element.querySelector(".card-title");
+
+            if (comment.textContent.search(query) === -1 && title.textContent.search(query) === -1) {
+                element.hidden = true;
+            }
+            else {
+                element.hidden = false;
+            }
+        })
+
+    }
 }

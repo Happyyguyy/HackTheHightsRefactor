@@ -11,23 +11,25 @@
 <div id="panelOne" class="panelOne bg-primary">
 <h1 class="heading text-light">Tags</h1>
 <p class="text-light" style="margin-left: 30px;">Click a Tag below to view cards with that tag.</p>
-<!-- TODO: Add searchbar -->
+<!-- Searchbar -->
+<div class="form-inline justify-content-center p-1"><input type="text" class="form-control" placeholder="Search" id="searchTags"></div>
 <div id="tagList">
     <!-- populated by script -->
 </div>
 </div>
 <!--    div for second panel-->
 <div id="panelTwo" class="panelTwo">
-<a href="javascript:void(0)" class="closebtn" onclick="closePanelTwo()">&laquo;</a>
+<a href="javascript:void(0)" class="closebtn" onclick="closePanelTwo();deleteCards()">&laquo;</a>
 <h1 class="heading text-dark" id="cardListHeading"></h1>
 <p class="text-dark" style="margin-left: 30px;">Click on a card below to see replies.</p>
 <!-- TODO: Add searchbar -->
 <!-- TODO: Add option to see unanswered -->
-<div class="card">
-    <div class="form-check" onclick="populateCards(this.parentElement.parentElement.dataset.tag)">
+<div class="card justify-content-center">
+    <div class="form-check" >
         <input type="checkbox" class="form-check-input" id="showUnanswered" />
         <label class="form-check-label" for="showUnanswered">Show Unanswered Cards</label>
     </div>
+    <form class="form-inline justify-content-center p-1"><input type="text" class="form-control" placeholder="Search" id="searchCards"></form>
 </div>
 <div class="container" id="cards">
   <!-- populated by script -->
@@ -68,6 +70,20 @@
   var panelOne = document.getElementById("panelOne");
   var panelTwo = document.getElementById("panelTwo");
   var panelThree = document.getElementById("panelThree");
+
+  document.querySelector("#showUnanswered").addEventListener("change", function (event) {
+      var thread = document.querySelector("#panelTwo").dataset.tag;
+      populateCards(thread, event.type);
+
+  })
+  document.querySelector("#searchTags").addEventListener("input", function(event) {
+        console.log(event)
+        search(this.value, "tags")
+  })
+  document.querySelector("#searchCards").addEventListener("input", function(event) {
+        console.log(event)
+        search(this.value, "cards")
+  })
 </script>
 </div>
 {% endblock %}
