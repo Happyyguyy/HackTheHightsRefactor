@@ -208,9 +208,11 @@ function createComment(commentData)  {
   var timeStamp = new Date(parseInt(commentData["dateTime"])).toLocaleString();
 
   var commentList = document.querySelector("#commentList");
+  // var listLength = commentList.children.length;
 
   var commentCard = document.createElement('div');
   commentCard.setAttribute("class", "card comCard");
+  // commentCard.database.row = listLength;
   // commentCard.setAttribute("class", "comCard")
 
     var commentText = document.createElement('h5');
@@ -252,26 +254,40 @@ function populateComments(key) {
 
     })
     // Create List of comments; if non post default
-    completed.child(key).child("comments").once("value", function(snapshot){
-        console.log(snapshot.val());
-        if (snapshot.val()) {
-          snapshot.val().forEach(element => createComment(element))
-          }
-        else {
-            pending.child(key).child("comments").once("value", function(snapshot) {
-                if (snapshot.val()) {
-                    snapshot.val().forEach(element => createComment(element))
-                }
-                else {
-                    var commentList = document.querySelector("#commentList");
-                        var commentCard = document.createElement('div');
-                        commentCard.setAttribute("class", "card comCard");
-                        commentCard.textContent = "No Comments";
-                    commentList.appendChild(commentCard);
-                }
-            })
+    completed.child(key).once("value").then(function (snapshot) {
+        console.log("in");
+        if (snapshot.hasChild("comments")) {
+            console.log(snapshot.val()["comments"]);
+              for (var comment in snapshot.val()["comments"]) {
+                  console.log(comment);
+                  createComment(snapshot.val()["comments"][comment])
+              }
         }
-  });
+    }).catch(error => console.log(error))
+    // completed.child(key).child("comments").once("value", function(snapshot){
+    //     console.log(snapshot.val());
+    //     if (snapshot.val()) {
+    //       for (var key in snapshot.val()) {
+    //           createComment(snapshot.val()[key])
+    //       }
+    //     }
+    //     else {
+    //         pending.child(key).child("comments").once("value", function(snapshot) {
+    //             if (snapshot.val()) {
+    //                 for (var key in snapshot.val()) {
+    //                     createComment(snapshot.val()[key])
+    //                 }
+    //             }
+    //             else {
+    //                 var commentList = document.querySelector("#commentList");
+    //                     var commentCard = document.createElement('div');
+    //                     commentCard.setAttribute("class", "card comCard");
+    //                     commentCard.textContent = "No Comments";
+    //                 commentList.appendChild(commentCard);
+        //         }
+        //     })
+        // }
+  // };
   // Set data regarding what comments are being shown.
   panelThree.dataset.thread = key;
   panelThree.dataset.completed = answeredState;
@@ -318,24 +334,18 @@ function drawCommentBox() {
 }
 function submitComment(text) {
     if (!text) {return};
-
+    var uid = firebase.auth().currentUser.uid;
     var thread = document.querySelector("#panelThree").dataset.thread;
     var location = document.querySelector("#panelThree").dataset.completed;
     console.log(thread, location);
 
     if (location === "completed") {
         completed.child(thread).once("value").then(snapshot => {
-            if (!snapshot.hasChild("comments")) {
-                var comList = [];
-            }
-            else {
-                var comList = snapshot.child("comments").val();
-            }
             var newComment = {};
             newComment["comment"] = text;
-            newComment["dateTime"] = firebase.database.ServerValue.TIMESTAMP
-            comList.push(newComment);
-            completed.child(thread).child("comments").set(comList);
+            newComment["dateTime"] = firebase.database.ServerValue.TIMESTAMP;
+            newComment["user"] = uid;
+            completed.child(thread).child("comments").push(newComment);
             console.log(newComment);
 
             // Update comment list with new comment
@@ -349,22 +359,20 @@ function submitComment(text) {
     else if (location === "pending") {
         pending.child(thread).once("value").then(snapshot => {
             if (!snapshot.hasChild("comments")) {
-                var comList = [];
-            }
-            else {
-                var comList = snapshot.child("comments").val();
-            }
             var newComment = {};
             newComment["comment"] = text;
             newComment["dateTime"] = firebase.database.ServerValue.TIMESTAMP
-            comList.push(newComment);
-            pending.child(thread).child("comments").set(comList);
+            newComment["user"] = uid;
+            pending.child(thread).child("comments").push(newComment).catch(function (error) {
+                alert("Stop spamming Comments. Wait a bit");
+            });
 
             // Update comment list with new comment
             // Modify timestamp to be valid in client
             newComment["dateTime"] = Math.floor(Date.now()/1000);
             createComment(newComment);
 
+            }
         })
     }
     document.querySelector("#commentBox").value = "";

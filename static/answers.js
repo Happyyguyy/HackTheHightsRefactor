@@ -146,9 +146,9 @@ function setContent(id, data) {
     document.querySelector("#commentList").innerHTML = `<li class="list-group-item commentCard">No comments</li>`
     if (comments.length) {
         deleteComments();
-        comments.forEach(element => {
-            listComment(element);
-        });
+        for (var key in comments) {
+            listComment(comment[key])
+        }
     };
 }
 function listTag(tag) {

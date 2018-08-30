@@ -111,8 +111,8 @@ body, html {
     top:3.5rem;
     height: 0;
     transition: 0.5s;
-    border-bottom-right-radius: 50px;
-    border-bottom-left-radius: 50px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
     overflow-y: hidden;
     overflow-x: hidden;
 }
