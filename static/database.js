@@ -74,7 +74,7 @@ function completeCard() {
     else {
         answer["dateTime"] = firebase.database.ServerValue.TIMESTAMP;
     }
-    // TODO: Get all comments: comment and dateTime
+    // TODO: Get all comments: comment and dateTime and UID
     comments = [];
     var commentCards = document.querySelectorAll(".commentCard");
     if (commentCards[0].innerText !== "No comments") {

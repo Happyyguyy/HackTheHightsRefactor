@@ -1,7 +1,7 @@
 {% extends 'layout.html' %}
 
 {% block body %}
-<script src="static/answers.js"></script>
+<script src="{{ url_for('static', filename='answers.js') }}"></script>
 <div class="h-100">
 
 <div class="container-fluid w-100 h-100" >

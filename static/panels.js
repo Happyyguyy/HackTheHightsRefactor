@@ -230,7 +230,7 @@ function createComment(commentData)  {
 // var text = "This question has not been answered yet.";
 // var dateTime = "";
 
-function populateComments(key) {
+function populateComments(key, direct= false) {
   var thread = panelThree.dataset.thread;
   var showUnanswered = document.querySelector("#showUnanswered").checked;
   var answeredState = document.getElementById(key).dataset.completed;
@@ -243,7 +243,7 @@ function populateComments(key) {
         console.log(snapshot.val())
         if (snapshot.val() !== null) {
             var text = snapshot.val()["text"];
-            var dateTime = "Answered: " +  new Date(snapshot.val()["dateTime"]).toLocaleString();
+            var dateTime = "Answered: " + new Date(snapshot.val()["dateTime"]).toLocaleString();
         }
         else {
             var text = "This question has not been answered yet.";
