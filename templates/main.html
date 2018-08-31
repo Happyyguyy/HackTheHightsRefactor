@@ -2,7 +2,6 @@
 
 {% block body %}
 <div class="container">
-<script src="static/panels.js" defer></script>
 
 <div class="blackout">
     </div>
@@ -60,7 +59,7 @@
 </div>
 
 </div>
-<script src="static/panels.js"></script>
+<script src="{{ url_for('static', filename='panels.js') }}"></script>
 
 <script>
 
@@ -84,6 +83,16 @@
         console.log(event)
         search(this.value, "cards")
   })
+  {% if tag%}
+      var tag = "{{tag|e}}";
+      document.querySelector("#showUnanswered").checked = true;
+
+      populateCards(tag);
+  {% endif %}
+  {% if card%}
+      var card = "{{card|e}}";
+      setTimeout(function (){populateComments(card, true)},1000);
+  {% endif %}
 </script>
 </div>
 {% endblock %}
