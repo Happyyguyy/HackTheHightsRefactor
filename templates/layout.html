@@ -9,27 +9,13 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
+    <script src="{{ url_for('static', filename='apikey.js')}}"
     <script src="{{ url_for('static', filename='main.js') }}"></script>
     <script src="{{ url_for('static', filename='database.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='firebase.js')}}"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://www.gstatic.com/firebasejs/4.13.0/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyDpYiNYdoHpAI6fU1e3bYsKjGi4RhCq_Cg",
-        authDomain: "cards-1b7fe.firebaseapp.com",
-        databaseURL: "https://cards-1b7fe.firebaseio.com",
-        projectId: "cards-1b7fe",
-        storageBucket: "cards-1b7fe.appspot.com",
-        messagingSenderId: "361481415273"
-      };
-      firebase.initializeApp(config);
-      var database = firebase.database().ref();
-      var pending = firebase.database().ref("pending");
-      var completed = firebase.database().ref('completed');
 
-      var tags = firebase.database().ref("tags");
-      </script>
 
   </head>
   <body>
